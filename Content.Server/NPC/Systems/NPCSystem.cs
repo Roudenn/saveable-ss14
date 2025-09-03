@@ -11,6 +11,7 @@ using Content.Shared.NPC.Systems;
 using Prometheus;
 using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
+using Robust.Shared.Map.Events;
 using Robust.Shared.Player;
 
 namespace Content.Server.NPC.Systems
@@ -42,8 +43,23 @@ namespace Content.Server.NPC.Systems
         {
             base.Initialize();
 
+            SubscribeLocalEvent<BeforeSerializationEvent>(OnSave);
+
             Subs.CVar(_configurationManager, CCVars.NPCEnabled, value => Enabled = value, true);
             Subs.CVar(_configurationManager, CCVars.NPCMaxUpdates, obj => _maxUpdates = obj, true);
+        }
+
+        private void OnSave(BeforeSerializationEvent ev)
+        {
+            // Sleep all NPCs on maps before saving them.
+            var query = EntityQueryEnumerator<HTNComponent, TransformComponent>();
+            while (query.MoveNext(out var uid, out var component, out var xform))
+            {
+                if (!ev.MapIds.Contains(xform.MapID))
+                    continue;
+
+                SleepNPC(uid, component);
+            }
         }
 
         public void OnPlayerNPCAttach(EntityUid uid, HTNComponent component, PlayerAttachedEvent args)

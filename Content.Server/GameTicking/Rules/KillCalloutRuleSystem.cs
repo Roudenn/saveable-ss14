@@ -78,9 +78,9 @@ public sealed class KillCalloutRuleSystem : GameRuleSystem<KillCalloutRuleCompon
                     ("username", session.Name));
 
             case KillNpcSource npc:
-                if (Deleted(npc.NpcEnt))
+                if (!TryGetEntity(npc.NpcEnt, out var npcEnt))
                     return string.Empty;
-                return Loc.GetString("death-match-name-npc", ("name", MetaData(npc.NpcEnt).EntityName));
+                return Loc.GetString("death-match-name-npc", ("name", MetaData(npcEnt.Value).EntityName));
         }
 
         return string.Empty;

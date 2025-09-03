@@ -1,6 +1,7 @@
 ﻿using Content.Shared.FixedPoint;
 using Content.Shared.Mobs;
 using Robust.Shared.Network;
+using Robust.Shared.Serialization;
 
 namespace Content.Server.KillTracking;
 
@@ -23,12 +24,12 @@ public sealed partial class KillTrackerComponent : Component
     public Dictionary<KillSource, FixedPoint2> LifetimeDamage = new();
 }
 
-public abstract record KillSource;
+[ImplicitDataDefinitionForInheritors]
+public abstract partial record KillSource;
 
 /// <summary>
 /// A kill source for players
 /// </summary>
-[DataDefinition, Serializable]
 public sealed partial record KillPlayerSource : KillSource
 {
     [DataField("playerId")]
@@ -43,13 +44,12 @@ public sealed partial record KillPlayerSource : KillSource
 /// <summary>
 /// A kill source for non-player controlled entities
 /// </summary>
-[DataDefinition, Serializable]
 public sealed partial record KillNpcSource : KillSource
 {
     [DataField("npcEnt")]
-    public EntityUid NpcEnt;
+    public NetEntity NpcEnt;
 
-    public KillNpcSource(EntityUid npcEnt)
+    public KillNpcSource(NetEntity npcEnt)
     {
         NpcEnt = npcEnt;
     }
@@ -58,5 +58,4 @@ public sealed partial record KillNpcSource : KillSource
 /// <summary>
 /// A kill source for kills with no damage origin
 /// </summary>
-[DataDefinition, Serializable]
 public sealed partial record KillEnvironmentSource : KillSource;

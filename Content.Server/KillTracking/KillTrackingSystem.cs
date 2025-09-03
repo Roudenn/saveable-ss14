@@ -86,9 +86,9 @@ public sealed class KillTrackingSystem : EntitySystem
         // - the kill source was the entity that died
         // - the entity that died had an assist on themselves
         var suicide = args.Origin == uid ||
-                      killSource is KillNpcSource npc && npc.NpcEnt == uid ||
+                      killSource is KillNpcSource npc && GetEntity(npc.NpcEnt) == uid ||
                       killSource is KillPlayerSource player && player.PlayerId == CompOrNull<ActorComponent>(uid)?.PlayerSession.UserId ||
-                      assistSource is KillNpcSource assistNpc && assistNpc.NpcEnt == uid ||
+                      assistSource is KillNpcSource assistNpc && GetEntity(assistNpc.NpcEnt) == uid ||
                       assistSource is KillPlayerSource assistPlayer && assistPlayer.PlayerId == CompOrNull<ActorComponent>(uid)?.PlayerSession.UserId;
 
         var ev = new KillReportedEvent(uid, killSource, assistSource, suicide);
@@ -100,7 +100,7 @@ public sealed class KillTrackingSystem : EntitySystem
         if (TryComp<ActorComponent>(sourceEntity, out var actor))
             return new KillPlayerSource(actor.PlayerSession.UserId);
         if (HasComp<HTNComponent>(sourceEntity))
-            return new KillNpcSource(sourceEntity.Value);
+            return new KillNpcSource(GetNetEntity(sourceEntity.Value));
         return new KillEnvironmentSource();
     }
 
