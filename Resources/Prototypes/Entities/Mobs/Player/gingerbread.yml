@@ -1,5 +1,5 @@
 - type: entity
-  save: false
+
   name: Urist McCookie
   parent: BaseMobGingerbread
   id: MobGingerbread
@@ -30,4 +30,3 @@
   - type: HTN
     rootTask:
       task: SimpleHostileCompound
-  

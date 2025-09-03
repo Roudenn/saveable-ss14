@@ -1,5 +1,5 @@
 - type: entity
-  save: false
+
   name: Urist McWebs
   parent: BaseMobSpeciesOrganic
   id: BaseMobArachnid
@@ -127,7 +127,7 @@
   - type: HumanoidAppearance
     species: Arachnid
   - type: Inventory
-    speciesId: arachnid 
+    speciesId: arachnid
 
 
 #>88w88<

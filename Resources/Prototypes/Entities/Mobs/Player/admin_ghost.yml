@@ -3,6 +3,7 @@
   id: AdminObserver
   name: admin observer
   categories: [ HideSpawnMenu ]
+  save: false
   components:
   - type: ContentEye
     maxZoom: 8.916104, 8.916104
